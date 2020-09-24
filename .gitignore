@@ -1,0 +1,25 @@
+# compiled output
+/dist
+/ui/dist
+/tmp
+/out-tsc
+target
+/public
+
+# dependencies
+/ui/node_modules
+
+# logs
+logs
+
+# IntelliJ
+.idea
+
+# Hydra
+.hydra
+.bloop
+.metals
+
+# sbt
+project/project
+project/target
