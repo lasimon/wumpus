@@ -7,7 +7,7 @@ case class Agent(
   orientation: Orientation = East,
   hasGold: Boolean = false,
   hasArrow: Boolean = true,
-                isAlive: Boolean = true
+  isAlive: Boolean = true
 ) {
   def turnLeft: Agent = this.copy(orientation = orientation.turnLeft)
   def turnRight: Agent = this.copy(orientation = orientation.turnRight)

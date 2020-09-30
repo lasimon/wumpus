@@ -22,8 +22,6 @@ object WumpusWorld {
     }
 
     val (initialEnv: Environment, initialPercept: Percept) = Environment(4, 4, 0.2, false)
-    initialEnv.visualize
-    initialPercept.show
 
     val agent = new NaiveAgent
     val totalReward: Double = runEpisode(initialEnv, agent, initialPercept)

@@ -134,18 +134,18 @@ final case class Environment private(
         case TurnLeft =>
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent.turnLeft, pitLocations, terminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(isStench, isBreeze, false, false, isGlitter, false, -1)
+            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
           )
         case TurnRight =>
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent.turnRight, pitLocations, terminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(isStench, isBreeze, false, false, isGlitter, false, -1)
+            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
           )
         case Grab =>
           val newAgent = agent.copy(hasGold = isGlitter)
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, newAgent, pitLocations, terminated, wumpusLocation, wumpusAlive, if (newAgent.hasGold) agent.location else goldLocation),
-            Percept(isStench, isBreeze, false, false, isGlitter, false, -1)
+            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
           )
         case Climb =>
           val inStartLocation = agent.location == Coords(0, 0)
