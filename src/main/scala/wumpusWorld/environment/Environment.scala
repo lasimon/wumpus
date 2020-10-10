@@ -150,10 +150,10 @@ final case class Environment private(
         case Climb =>
           val inStartLocation = agent.location == Coords(0, 0)
           val success = agent.hasGold && inStartLocation
-          val isTerminated = success || allowClimbWithoutGold
+          val isTerminated = success || (allowClimbWithoutGold && inStartLocation)
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent, pitLocations, isTerminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(false, false, agent.hasGold, false, false, isTerminated, if (success) 999 else -1)
+            Percept(false, false, isGlitter, false, false, isTerminated, if (success) 999 else -1)
           )
         case Shoot =>
           val hadArrow = agent.hasArrow
