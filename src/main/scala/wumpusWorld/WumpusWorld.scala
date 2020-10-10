@@ -13,7 +13,7 @@ object WumpusWorld {
   def main(args: Array[String]) = {
 
     def runEpisode(env: Environment, agent: NaiveAgent, percept: Percept): Double = {
-      val nextAction = agent.nextAction(percept)
+      val nextAction = agent.nextAction(None)
       println(s"Action: $nextAction")
       val (nextEnvironment: Environment, nextPercept: Percept) = env.applyAction(nextAction)
       println(nextEnvironment.visualize)

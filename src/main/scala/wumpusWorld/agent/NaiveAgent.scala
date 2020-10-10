@@ -6,7 +6,7 @@ import wumpusWorld.environment.{Action, Climb, Forward, Grab, Percept, Shoot, Tu
 class NaiveAgent extends Agent {
   private val randGen = new Random()
 
-  def nextAction(percept: Percept): Action  = {
+  def nextAction(beliefState: Option[BeliefState]): Action  = {
     randGen.nextInt(6) match {
       case 0 => Forward
       case 1 => TurnLeft
