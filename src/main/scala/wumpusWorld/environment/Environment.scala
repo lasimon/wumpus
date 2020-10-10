@@ -134,26 +134,26 @@ final case class Environment private(
         case TurnLeft =>
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent.turnLeft, pitLocations, terminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(isStench, isBreeze, false, false, isGlitter, false, -1)
+            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
           )
         case TurnRight =>
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent.turnRight, pitLocations, terminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(isStench, isBreeze, false, false, isGlitter, false, -1)
+            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
           )
         case Grab =>
           val newAgent = agent.copy(hasGold = isGlitter)
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, newAgent, pitLocations, terminated, wumpusLocation, wumpusAlive, if (newAgent.hasGold) agent.location else goldLocation),
-            Percept(isStench, isBreeze, false, false, isGlitter, false, -1)
+            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
           )
         case Climb =>
           val inStartLocation = agent.location == Coords(0, 0)
           val success = agent.hasGold && inStartLocation
-          val isTerminated = success || allowClimbWithoutGold
+          val isTerminated = success || (allowClimbWithoutGold && inStartLocation)
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent, pitLocations, isTerminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(false, false, agent.hasGold, false, false, isTerminated, if (success) 999 else -1)
+            Percept(false, false, isGlitter, false, false, isTerminated, if (success) 999 else -1)
           )
         case Shoot =>
           val hadArrow = agent.hasArrow
