@@ -14,7 +14,7 @@ object BeelineWorld {
       val (nextEnvironment: Environment, nextPercept: Percept) = env.applyAction(nextAction)
       println(nextEnvironment.visualize)
       println(nextPercept.show)
-      nextPercept.reward + (if (!nextPercept.isTerminated) runEpisode(nextEnvironment, agent, nextPercept) else 0.0)
+      nextPercept.reward + (if (!nextPercept.isTerminated) runEpisode(nextEnvironment, nextAgent, nextPercept) else 0.0)
     }
 
     val (initialEnv: Environment, initialPercept: Percept) = Environment(4, 4, 0.2, false)

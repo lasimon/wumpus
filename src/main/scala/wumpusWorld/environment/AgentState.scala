@@ -33,4 +33,6 @@ case class AgentState(
           case _ => this
         }
   }
+
+  def show: String = s"location: $location orientation: $orientation hasGold: $hasGold hasArrow: $hasArrow isAlive; $isAlive"
 }

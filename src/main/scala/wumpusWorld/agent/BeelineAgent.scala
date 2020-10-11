@@ -13,11 +13,14 @@ final case class BeelineAgent private(
 
   private val randGen = new Random()
 
+  private def show = s"BeelineAgent state: ${agentState.show} safeLocations: $safeLocations beelineActionList: $beelineActionList"
+
   private def constructBeelinePlan: List[Action] = ??? // create a list of move actions to get out quickly and safely
   // do this by creating a directed graph with safe locations as nodes and edges pointing possible ways back to the start square
   // then find the shortest path
 
   def nextAction(percept: Percept): (BeelineAgent, Action)  = {
+//    println(show) // remove // for debugging
     if (agentState.hasGold) { // we're in the endgame
       if (agentState.location == Coords(0,0)) { // we have a winner
         (this, Climb)
