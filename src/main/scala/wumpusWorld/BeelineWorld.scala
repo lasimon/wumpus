@@ -1,18 +1,14 @@
 package wumpusWorld
 
-import wumpusWorld.Bayes.Probability
-import wumpusWorld.agent.NaiveAgent
-import wumpusWorld.environment.{Action, Environment, Percept}
+import wumpusWorld.agent.{Agent, BeelineAgent, NaiveAgent}
+import wumpusWorld.environment.{Environment, Percept}
 import eu.timepit.refined.auto._
-import eu.timepit.refined.refineV
 
-import scala.math.BigDecimal.double2bigDecimal
-
-object WumpusWorld {
+object BeelineWorld {
 
   def main(args: Array[String]) = {
 
-    def runEpisode(env: Environment, agent: NaiveAgent, percept: Percept): Double = {
+    def runEpisode(env: Environment, agent: Agent, percept: Percept): Double = {
       val (nextAgent, nextAction) = agent.nextAction(percept)
       println(s"Action: $nextAction")
       val (nextEnvironment: Environment, nextPercept: Percept) = env.applyAction(nextAction)
@@ -23,7 +19,7 @@ object WumpusWorld {
 
     val (initialEnv: Environment, initialPercept: Percept) = Environment(4, 4, 0.2, false)
 
-    val agent = new NaiveAgent
+    val agent = BeelineAgent(4, 4)
     val totalReward: Double = runEpisode(initialEnv, agent, initialPercept)
     println(s"Total reward: $totalReward")
   }

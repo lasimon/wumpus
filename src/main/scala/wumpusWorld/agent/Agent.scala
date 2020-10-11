@@ -1,7 +1,7 @@
 package wumpusWorld.agent
 
-import wumpusWorld.environment.{Action}
+import wumpusWorld.environment.{Action, Percept}
 
 trait Agent {
-  def nextAction(beliefState: Option[BeliefState]): Action
+  def nextAction(percept: Percept): (Agent, Action)
 }

@@ -22,4 +22,15 @@ case class AgentState(
     }
     this.copy(location = newAgentLocation)
   }
+
+  def useArrow: AgentState = this.copy(hasArrow = false)
+
+  def applyMoveAction(action: Action, gridWidth: Int, gridHeight: Int): AgentState = {
+        action match {
+          case TurnLeft => turnLeft
+          case TurnRight => turnRight
+          case Forward => forward(gridWidth, gridHeight)
+          case _ => this
+        }
+  }
 }
