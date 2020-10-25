@@ -48,7 +48,22 @@ case object Grab extends Action
 
 case object Climb extends Action
 
-case class Coords(x: Int, y: Int)
+case class Coords(x: Int, y: Int) {
+   def isAdjacentTo(coords: Coords): Boolean =
+     (x == coords.x && Math.abs(coords.y - y) == 1) || (y == coords.y && Math.abs(coords.x - x) == 1)
+
+  def adjacentCells(gridWidth: Int, gridHeight: Int): List[Coords] = {
+    val toLeft: List[Coords] = if (x > 0) List(Coords(x - 1, y)) else Nil
+
+    val toRight: List[Coords] = if (x < gridWidth - 1) List(Coords(x + 1, y)) else Nil
+
+    val below: List[Coords] = if (y > 0) List(Coords(x, y - 1)) else Nil
+
+    val above: List[Coords] = if (y < gridHeight - 1) List(Coords(x, y + 1)) else Nil
+
+    toLeft ::: toRight ::: below ::: above
+  }
+}
 
 case class Percept(stench: Boolean, breeze: Boolean, glitter: Boolean, bump: Boolean, scream: Boolean, isTerminated: Boolean, reward: Double) {
   def show: String = s"stench:$stench breeze:$breeze glitter:$glitter bump:$bump scream:$scream isTerminated:$isTerminated reward:$reward"
@@ -89,24 +104,12 @@ final case class Environment private(
     agent.hasArrow && wumpusAlive && wumpusInLineOfFire
   }
 
-  private def adjacentCells(coords: Coords): List[Coords] = {
-    val toLeft: List[Coords] = if (coords.x > 0) List(Coords(coords.x - 1, coords.y)) else Nil
-
-    val toRight: List[Coords] = if (coords.x < gridWidth - 1) List(Coords(coords.x + 1, coords.y)) else Nil
-
-    val below: List[Coords] = if (coords.y > 0) List(Coords(coords.x, coords.y - 1)) else Nil
-
-    val above: List[Coords] = if (coords.y < gridHeight - 1) List(Coords(coords.x, coords.y + 1)) else Nil
-
-    toLeft ::: toRight ::: below ::: above
-  }
-
   private def isPitAdjacent(coords: Coords): Boolean = {
-    adjacentCells(coords).exists(cell => pitLocations.contains(cell))
+    coords.adjacentCells(gridWidth, gridHeight).exists(cell => pitLocations.contains(cell))
   }
 
   private def isWumpusAdjacent(coords: Coords): Boolean = {
-    adjacentCells(coords).exists(cell => isWumpusAt(cell))
+    coords.adjacentCells(gridWidth, gridHeight).exists(cell => isWumpusAt(cell))
   }
 
   private def isBreeze: Boolean = isPitAdjacent(agent.location)

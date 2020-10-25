@@ -6,12 +6,13 @@ scalaVersion := "2.12.12"
 
 resolvers += Resolver.jcenterRepo
 
-//resolvers += Resolver.mavenCentral
+resolvers += Resolver.mavenCentral
 
 resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
 libraryDependencies ++= Seq(
-  "eu.timepit" %% "refined" % "0.9.15"
+  "eu.timepit" %% "refined" % "0.9.15",
+  "com.cra.figaro" %% "figaro" % "5.0.0.0"
 )
 
 //libraryDependencies ++= Seq(

@@ -1,6 +1,6 @@
 package wumpusWorld
 
-import wumpusWorld.agent.{Agent, BeelineAgent, NaiveAgent}
+import wumpusWorld.agent.{Agent, BeelineAgent}
 import wumpusWorld.environment.{Environment, Percept}
 import eu.timepit.refined.auto._
 
@@ -17,7 +17,7 @@ object BeelineWorld {
       nextPercept.reward + (if (!nextPercept.isTerminated) runEpisode(nextEnvironment, nextAgent, nextPercept) else 0.0)
     }
 
-    val (initialEnv: Environment, initialPercept: Percept) = Environment(4, 4, 0.2, false)
+    val (initialEnv: Environment, initialPercept: Percept) = Environment(4, 4, 0.0, false)
 
     val agent = BeelineAgent(4, 4)
     val totalReward: Double = runEpisode(initialEnv, agent, initialPercept)
