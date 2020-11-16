@@ -34,5 +34,10 @@ case class AgentState(
         }
   }
 
+  def applyAction(actionOption: Option[Action], gridWidth: Int, gridHeight: Int): AgentState = actionOption match {
+    case Some(action) => if (action == Shoot) useArrow else this.applyMoveAction(action: Action, gridWidth: Int, gridHeight: Int)
+    case None => this
+  }
+
   def show: String = s"location: $location orientation: $orientation hasGold: $hasGold hasArrow: $hasArrow isAlive; $isAlive"
 }

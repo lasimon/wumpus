@@ -15,10 +15,11 @@ libraryDependencies ++= Seq(
   "com.cra.figaro" %% "figaro" % "5.0.0.0"
 )
 
-//libraryDependencies ++= Seq(
-//  "me.shadaj"  %% "scalapy-core" % "0.3.0+31-94930a4d"
-//)
+libraryDependencies ++= Seq(
+  "me.shadaj"  %% "scalapy-core" % "0.4.0"
+)
 
-//fork := true
-// use `pip show jep` to find your install location
-//javaOptions += "-Djna.library.path=/usr/local/opt/python@3.7/Frameworks/Python.framework/Versions/3.7/lib"
+fork := true
+import scala.sys.process._
+javaOptions += s"-Djava.library.path=${"python3-config --ldflags".!! + "/lib"}"
+// javaOptions += "-Djna.library.path=/usr/local/opt/python@3.7/Frameworks/Python.framework/Versions/3.7/lib"

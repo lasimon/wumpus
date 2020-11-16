@@ -2,6 +2,7 @@ package wumpusWorld.environment
 
 import wumpusWorld.Bayes.Probability
 
+import scala.annotation.tailrec
 import scala.util.Random
 
 sealed trait Orientation {
@@ -34,19 +35,36 @@ case object West extends Orientation {
   def turnRight: Orientation = North
 }
 
-sealed trait Action
+sealed trait Action {
+  def toInt: Int
+}
 
-case object Forward extends Action
+case object Action {
+  private val randGen = new Random()
 
-case object TurnLeft extends Action
+  def random: Action = fromInt(randGen.nextInt(6))
 
-case object TurnRight extends Action
+  def fromInt(n: Int): Action = n match {
+    case 0 => Forward
+    case 1 => TurnLeft
+    case 2 => TurnRight
+    case 3 => Shoot
+    case 4 => Grab
+    case 5 => Climb
+  }
+}
 
-case object Shoot extends Action
+case object Forward extends Action { def toInt = 0 }
 
-case object Grab extends Action
+case object TurnLeft extends Action { def toInt = 1 }
 
-case object Climb extends Action
+case object TurnRight extends Action { def toInt = 2 }
+
+case object Shoot extends Action { def toInt = 3 }
+
+case object Grab extends Action { def toInt = 4 }
+
+case object Climb extends Action { def toInt = 5 }
 
 case class Coords(x: Int, y: Int) {
    def isAdjacentTo(coords: Coords): Boolean =
@@ -121,7 +139,7 @@ final case class Environment private(
     if (terminated)
       (
         this,
-        Percept(false, false, false, false, false, true, 0)
+        Percept(stench = false, breeze = false, glitter = false, bump = false, scream = false, isTerminated = true, 0)
       )
     else {
       action match {
@@ -132,23 +150,23 @@ final case class Environment private(
           val newEnv = new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, newAgent, pitLocations, death, wumpusLocation, wumpusAlive,  if (agent.hasGold) newAgent.location else goldLocation)
           (
             newEnv,
-            Percept(newEnv.isStench, newEnv.isBreeze, newEnv.isGlitter, newAgent.location == agent.location, false, !newAgent.isAlive, if (newAgent.isAlive) -1 else -1001)
+            Percept(newEnv.isStench, newEnv.isBreeze, newEnv.isGlitter, newAgent.location == agent.location, scream = false, isTerminated = !newAgent.isAlive, if (newAgent.isAlive) -1 else -1001)
           )
         case TurnLeft =>
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent.turnLeft, pitLocations, terminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
+            Percept(isStench, isBreeze, isGlitter,bump = false, scream = false,  isTerminated = false, -1)
           )
         case TurnRight =>
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent.turnRight, pitLocations, terminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
+            Percept(isStench, isBreeze, isGlitter,bump = false, scream = false,  isTerminated = false, -1)
           )
         case Grab =>
           val newAgent = agent.copy(hasGold = isGlitter)
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, newAgent, pitLocations, terminated, wumpusLocation, wumpusAlive, if (newAgent.hasGold) agent.location else goldLocation),
-            Percept(isStench, isBreeze, isGlitter,false, false,  false, -1)
+            Percept(isStench, isBreeze, isGlitter,bump = false, scream = false,  isTerminated = false, -1)
           )
         case Climb =>
           val inStartLocation = agent.location == Coords(0, 0)
@@ -156,14 +174,14 @@ final case class Environment private(
           val isTerminated = success || (allowClimbWithoutGold && inStartLocation)
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent, pitLocations, isTerminated, wumpusLocation, wumpusAlive, goldLocation),
-            Percept(false, false, isGlitter, false, false, isTerminated, if (success) 999 else -1)
+            Percept(stench = false, breeze = false, glitter = isGlitter, bump = false, scream = false, isTerminated = isTerminated, if (success) 999 else -1)
           )
         case Shoot =>
           val hadArrow = agent.hasArrow
           val wumpusKilled = killAttemptSuccessful
           (
             new Environment(gridWidth, gridHeight, pitProb, allowClimbWithoutGold, agent.copy(hasArrow = false), pitLocations, terminated, wumpusLocation, wumpusAlive && !wumpusKilled, goldLocation),
-            Percept(isStench, isBreeze, isGlitter, false, wumpusKilled, false, if (hadArrow) -11 else -1)
+            Percept(isStench, isBreeze, isGlitter, bump = false, scream = wumpusKilled, isTerminated = false, if (hadArrow) -11 else -1)
           )
       }
     }
@@ -193,6 +211,7 @@ object Environment {
              allowClimbWithoutGold: Boolean
            ): (Environment, Percept) = {
 
+    @tailrec
     def randomLocationExceptOrigin: Coords = {
       val x = randGen.nextInt(gridWidth)
       val y = randGen.nextInt(gridHeight)
@@ -224,7 +243,7 @@ object Environment {
 
     (
       env,
-      Percept(env.isStench, env.isBreeze, false,false, false,  false, 0.0)
+      Percept(env.isStench, env.isBreeze, glitter = false,bump = false, scream = false,  isTerminated = false, 0.0)
     )
   }
 }
