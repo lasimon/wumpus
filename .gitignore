@@ -19,6 +19,7 @@ logs
 .hydra
 .bloop
 .metals
+.bsp
 
 # sbt
 project/project
